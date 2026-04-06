@@ -1,0 +1,79 @@
+<app-header></app-header>
+
+<section class="page">
+  <h2>My ToDo List</h2>
+  <p class="user">User: {{ email }}</p>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="addTodo()" class="add-form">
+      <input
+        type="text"
+        formControlName="description"
+        placeholder="Enter a new task"
+        maxlength="250"
+      />
+      <button type="submit">Add</button>
+    </form>
+
+    <div class="validation" *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      <small *ngIf="form.controls.description.errors?.['required']">Description is required.</small>
+      <small *ngIf="form.controls.description.errors?.['maxlength']">Maximum 250 characters.</small>
+    </div>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="card">
+    <table *ngIf="todos.length > 0; else emptyState">
+      <thead>
+        <tr>
+          <th>Done</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let todo of todos">
+          <td>
+            <input
+              type="checkbox"
+              [checked]="todo.isCompleted"
+              (change)="toggleCompleted(todo)"
+            />
+          </td>
+
+          <td>
+            <ng-container *ngIf="editingId !== todo.id; else editRow">
+              <span [class.completed]="todo.isCompleted">{{ todo.description }}</span>
+            </ng-container>
+
+            <ng-template #editRow>
+              <input
+                type="text"
+                [formControl]="editForm.controls.description"
+                maxlength="250"
+              />
+            </ng-template>
+          </td>
+
+          <td>
+            <ng-container *ngIf="editingId !== todo.id">
+              <button type="button" (click)="startEdit(todo)">Edit</button>
+              <button type="button" (click)="remove(todo)">Remove</button>
+            </ng-container>
+
+            <ng-container *ngIf="editingId === todo.id">
+              <button type="button" (click)="saveEdit(todo)">Save</button>
+              <button type="button" (click)="cancelEdit()">Cancel</button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #emptyState>
+      <p>No ToDo items yet.</p>
+    </ng-template>
+  </div>
+</section>

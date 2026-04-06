@@ -1,0 +1,28 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2937;
+  color: white;
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.menu a.active {
+  text-decoration: underline;
+}

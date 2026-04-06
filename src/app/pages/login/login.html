@@ -1,0 +1,24 @@
+<app-header></app-header>
+
+<section class="page">
+  <div class="card">
+    <h2>Enter your email</h2>
+    <p>Only valid users can access their personal ToDo list.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
+
+      <div class="validation" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <small *ngIf="form.controls.email.errors?.['required']">Email is required.</small>
+        <small *ngIf="form.controls.email.errors?.['email']">Enter a valid email.</small>
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Checking...' : 'Enter' }}
+      </button>
+    </form>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </div>
+</section>

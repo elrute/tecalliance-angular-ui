@@ -1,0 +1,37 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: white;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+button {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.validation small,
+.error {
+  color: #b91c1c;
+}
