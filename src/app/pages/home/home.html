@@ -8,16 +8,16 @@
     <form [formGroup]="form" (ngSubmit)="addTodo()" class="add-form">
       <input
         type="text"
-        formControlName="description"
+        formControlName="title"
         placeholder="Enter a new task"
         maxlength="250"
       />
       <button type="submit">Add</button>
     </form>
 
-    <div class="validation" *ngIf="form.controls.description.touched && form.controls.description.invalid">
-      <small *ngIf="form.controls.description.errors?.['required']">Description is required.</small>
-      <small *ngIf="form.controls.description.errors?.['maxlength']">Maximum 250 characters.</small>
+    <div class="validation" *ngIf="form.controls.title.touched && form.controls.title.invalid">
+      <small *ngIf="form.controls.title.errors?.['required']">Title is required.</small>
+      <small *ngIf="form.controls.title.errors?.['maxlength']">Maximum 250 characters.</small>
     </div>
   </div>
 
@@ -28,7 +28,7 @@
       <thead>
         <tr>
           <th>Done</th>
-          <th>Description</th>
+          <th>Title</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -38,20 +38,20 @@
           <td>
             <input
               type="checkbox"
-              [checked]="todo.isCompleted"
+              [checked]="todo.completed"
               (change)="toggleCompleted(todo)"
             />
           </td>
 
           <td>
             <ng-container *ngIf="editingId !== todo.id; else editRow">
-              <span [class.completed]="todo.isCompleted">{{ todo.description }}</span>
+              <span [class.completed]="todo.completed">{{ todo.title }}</span>
             </ng-container>
 
             <ng-template #editRow>
               <input
                 type="text"
-                [formControl]="editForm.controls.description"
+                [formControl]="editForm.controls.title"
                 maxlength="250"
               />
             </ng-template>

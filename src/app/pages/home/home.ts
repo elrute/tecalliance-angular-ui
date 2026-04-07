@@ -21,30 +21,36 @@ export class HomeComponent implements OnInit {
 
   todos: TodoItem[] = [];
   email = '';
+  userId: number | null = null;
   errorMessage = '';
-  editingId: string | null = null;
+  editingId: number | null = null;
 
   form = this.fb.group({
-    description: ['', [Validators.required, Validators.maxLength(250)]]
+    title: ['', [Validators.required, Validators.maxLength(250)]]
   });
 
   editForm = this.fb.group({
-    description: ['', [Validators.required, Validators.maxLength(250)]]
+    title: ['', [Validators.required, Validators.maxLength(250)]]
   });
 
   ngOnInit(): void {
-    const email = this.session.getEmail();
-    if (!email) {
+    const user = this.session.getUser();
+    if (!user) {
       this.router.navigate(['/']);
       return;
     }
 
-    this.email = email;
+    this.email = user.email;
+    this.userId = user.id;
     this.loadTodos();
   }
 
   loadTodos(): void {
-    this.api.getTodos(this.email).subscribe({
+    if (this.userId == null) {
+      return;
+    }
+
+    this.api.getTodos(this.userId).subscribe({
       next: data => {
         this.todos = data;
       },
@@ -60,12 +66,17 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    const description = this.form.value.description ?? '';
+    if (this.userId == null) {
+      this.errorMessage = 'Missing user information.';
+      return;
+    }
 
-    this.api.addTodo(this.email, description).subscribe({
-      next: () => {
+    const title = this.form.value.title ?? '';
+
+    this.api.addTodo(this.userId, title).subscribe({
+      next: (todo) => {
+        this.todos = [...this.todos, todo];
         this.form.reset();
-        this.loadTodos();
       },
       error: err => {
         this.errorMessage = err?.error?.message ?? 'Failed to add ToDo.';
@@ -75,7 +86,7 @@ export class HomeComponent implements OnInit {
 
   startEdit(todo: TodoItem): void {
     this.editingId = todo.id;
-    this.editForm.patchValue({ description: todo.description });
+    this.editForm.patchValue({ title: todo.title });
   }
 
   cancelEdit(): void {
@@ -91,13 +102,15 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    const description = this.editForm.value.description ?? '';
+    const title = this.editForm.value.title ?? '';
+    const updated: TodoItem = { ...todo, title };
 
-    this.api.updateTodo(todo.id, this.email, description, todo.isCompleted).subscribe({
-      next: () => {
-        this.editingId = null;
-        this.editForm.reset();
-        this.loadTodos();
+    this.api.updateTodo(updated).subscribe({
+      next: (saved) => {
+        this.todos = this.todos.map((item) =>
+          item.id === saved.id ? saved : item
+        );
+        this.cancelEdit();
       },
       error: (err) => {
         this.errorMessage = err?.error?.message ?? 'Failed to update ToDo item.';
@@ -108,13 +121,17 @@ export class HomeComponent implements OnInit {
   toggleCompleted(todo: TodoItem): void {
     this.errorMessage = '';
 
-    this.api.updateTodo(
-      todo.id,
-      this.email,
-      todo.description,
-      !todo.isCompleted
-    ).subscribe({
-      next: () => this.loadTodos(),
+    const updated: TodoItem = {
+      ...todo,
+      completed: !todo.completed
+    };
+
+    this.api.updateTodo(updated).subscribe({
+      next: (saved) => {
+        this.todos = this.todos.map((item) =>
+          item.id === saved.id ? saved : item
+        );
+      },
       error: (err) => {
         this.errorMessage = err?.error?.message ?? 'Failed to update ToDo item.';
       }
@@ -122,13 +139,15 @@ export class HomeComponent implements OnInit {
   }
 
   remove(todo: TodoItem): void {
-    const confirmed = window.confirm(`Are you sure you want to remove "${todo.description}"?`);
+    const confirmed = window.confirm(`Are you sure you want to remove "${todo.title}"?`);
     if (!confirmed) {
       return;
     }
 
-    this.api.deleteTodo(todo.id, this.email).subscribe({
-      next: () => this.loadTodos(),
+    this.api.deleteTodo(todo.id).subscribe({
+      next: () => {
+        this.todos = this.todos.filter((item) => item.id !== todo.id);
+      },
       error: (err) => {
         this.errorMessage = err?.error?.message ?? 'Failed to delete ToDo item.';
       }

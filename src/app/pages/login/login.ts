@@ -37,12 +37,12 @@ export class LoginComponent {
     this.loading = true;
 
     this.api.validateUser(email).subscribe({
-      next: () => {
-        this.session.setEmail(email);
+      next: (user) => {
+        this.session.setUser(user);
         this.router.navigate(['/home']);
       },
       error: err => {
-        this.errorMessage = err?.error?.message ?? 'Validation failed.';
+        this.errorMessage = err?.message ?? err?.error?.message ?? 'Validation failed.';
         this.loading = false;
       },
       complete: () => {

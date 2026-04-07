@@ -1,35 +1,57 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { TodoItem } from '../models/todo-item';
+import { User } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class TodoApiService {
   private readonly baseUrl = 'https://localhost:5001/api/todo';
+  private readonly todosSuffix = '/todos';
+  private readonly usersSuffix = '/users';
 
   constructor(private http: HttpClient) {}
 
-  validateUser(email: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/validate-user`, { email });
+  validateUser(email: string): Observable<User> {
+    return this.http
+      .get<User[]>(
+        `${this.baseUrl}${this.usersSuffix}?email=${encodeURIComponent(email)}`
+      )
+      .pipe(
+        map((users) => {
+          const user = users[0];
+          if (!user) {
+            throw new Error('User not found');
+          }
+          return user;
+        })
+      );
   }
 
-  getTodos(email: string): Observable<TodoItem[]> {
-    return this.http.get<TodoItem[]>(`${this.baseUrl}?email=${encodeURIComponent(email)}`);
+  getTodos(userId: number): Observable<TodoItem[]> {
+    return this.http.get<TodoItem[]>(
+      `${this.baseUrl}${this.todosSuffix}?userId=${userId}`
+    );
   }
 
-  addTodo(userEmail: string, description: string): Observable<TodoItem> {
-    return this.http.post<TodoItem>(this.baseUrl, { userEmail, description });
-  }
-
-  updateTodo(id: string, userEmail: string, description: string, isCompleted: boolean): Observable<TodoItem> {
-    return this.http.put<TodoItem>(`${this.baseUrl}/${id}`, {
-      userEmail,
-      description,
-      isCompleted
+  addTodo(userId: number, title: string): Observable<TodoItem> {
+    return this.http.post<TodoItem>(`${this.baseUrl}${this.todosSuffix}`, {
+      userId,
+      title,
+      completed: false
     });
   }
 
-  deleteTodo(id: string, email: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}?email=${encodeURIComponent(email)}`);
+  updateTodo(todo: TodoItem): Observable<TodoItem> {
+    return this.http.put<TodoItem>(
+      `${this.baseUrl}${this.todosSuffix}/${todo.id}`,
+      todo
+    );
+  }
+
+  deleteTodo(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}${this.todosSuffix}/${id}`
+    );
   }
 }
