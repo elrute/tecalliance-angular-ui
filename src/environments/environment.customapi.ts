@@ -1,5 +1,5 @@
 export const environment = {
-  apiBaseUrl: 'https://localhost:5001/api/todo',
+  apiBaseUrl: 'https://localhost:5001',
   todosSuffix: '/todos',
   usersSuffix: '/users'
 } as const;
