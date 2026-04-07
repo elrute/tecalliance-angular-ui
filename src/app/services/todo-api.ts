@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { TodoItem } from '../models/todo-item';
 import { User } from '../models/user';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TodoApiService {
-  private readonly baseUrl = 'https://localhost:5001/api/todo';
-  private readonly todosSuffix = '/todos';
-  private readonly usersSuffix = '/users';
+  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly todosSuffix = environment.todosSuffix;
+  private readonly usersSuffix = environment.usersSuffix;
 
   constructor(private http: HttpClient) {}
 
