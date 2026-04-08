@@ -46,6 +46,7 @@
                 class="edit-textarea"
                 [formControl]="editForm.controls.title"
                 maxlength="250"
+                (keydown.enter)="saveEdit(todo); $event.preventDefault()"
               ></textarea>
             }
           </label>
