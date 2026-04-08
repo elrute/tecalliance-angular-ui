@@ -50,11 +50,11 @@
               "extractLicenses": false,
               "sourceMap": true
             },
-            "customapi": {
+            "localapi": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.customapi.ts"
+                  "with": "src/environments/environment.localapi.ts"
                 }
               ]
             }
@@ -70,8 +70,8 @@
             "development": {
               "buildTarget": "todo-portal-ui:build:development"
             },
-            "customapi": {
-              "buildTarget": "todo-portal-ui:build:customapi"
+            "localapi": {
+              "buildTarget": "todo-portal-ui:build:localapi"
             }
           },
           "defaultConfiguration": "development"

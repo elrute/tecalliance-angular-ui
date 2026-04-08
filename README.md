@@ -4,10 +4,10 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+By default `ng serve` uses the hosted JSONPlaceholder API (`https://jsonplaceholder.typicode.com`) configured in `src/environments/environment.ts`. To run against your local ASP.NET API instead, start that backend and serve the UI with the `localapi` configuration:
 
 ```bash
-ng serve
+ng serve --configuration localapi
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
