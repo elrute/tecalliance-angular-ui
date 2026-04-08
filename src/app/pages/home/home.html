@@ -56,11 +56,12 @@
               @if (editingId !== todo.id) {
                 <span [class.completed]="todo.completed">{{ todo.title }}</span>
               } @else {
-                <input
-                  type="text"
+                <textarea
+                  class="edit-textarea"
                   [formControl]="editForm.controls.title"
                   maxlength="250"
-                />
+                  rows="2"
+                ></textarea>
               }
             </td>
 

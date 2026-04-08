@@ -29,6 +29,15 @@ button {
   cursor: pointer;
 }
 
+.edit-textarea {
+  width: 100%;
+  min-height: 4rem;
+  resize: vertical;
+  padding: 0.6rem;
+  font: inherit;
+  box-sizing: border-box;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
