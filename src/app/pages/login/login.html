@@ -9,16 +9,24 @@
       <label for="email">Email</label>
       <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
 
-      <div class="validation" *ngIf="form.controls.email.touched && form.controls.email.invalid">
-        <small *ngIf="form.controls.email.errors?.['required']">Email is required.</small>
-        <small *ngIf="form.controls.email.errors?.['email']">Enter a valid email.</small>
-      </div>
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <div class="validation">
+          @if (form.controls.email.errors?.['required']) {
+            <small>Email is required.</small>
+          }
+          @if (form.controls.email.errors?.['email']) {
+            <small>Enter a valid email.</small>
+          }
+        </div>
+      }
 
       <button type="submit" [disabled]="loading">
         {{ loading ? 'Checking...' : 'Enter' }}
       </button>
     </form>
 
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
   </div>
 </section>
