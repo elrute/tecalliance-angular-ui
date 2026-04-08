@@ -1,8 +1,20 @@
 <header class="topbar">
-  <h1 class="title">ToDo Portal</h1>
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 250 250" role="img" aria-label="Angular logo">
+      <path fill="#dd0031" d="M125 15 L25 55 L42 205 L125 245 L208 205 L225 55 Z"/>
+      <path fill="#c3002f" d="M125 15 L125 245 L208 205 L225 55 Z"/>
+      <path fill="#fff" d="M125 70 L80 185 H108 L120 155 H130 L142 185 H170 Z M133 135 H117 L125 113 Z"/>
+    </svg>
+    <span class="title">MyTODOList</span>
+  </div>
 
-  <nav class="menu">
+  <div class="menu">
     <a routerLink="/home" routerLinkActive="active">Home</a>
+    <span class="divider">|</span>
     <a routerLink="/about" routerLinkActive="active">About</a>
-  </nav>
+    @if (email) {
+      <span class="user-label">{{ email }}</span>
+      <button class="pill logout" type="button" (click)="logout()">Logout</button>
+    }
+  </div>
 </header>

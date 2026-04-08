@@ -1,18 +1,16 @@
 <app-header></app-header>
 
 <section class="page">
-  <h2>My ToDo List</h2>
-  <p class="user">User: {{ email }}</p>
 
-  <div class="card">
+  <div class="card add-card">
     <form [formGroup]="form" (ngSubmit)="addTodo()" class="add-form">
       <input
         type="text"
         formControlName="title"
-        placeholder="Enter a new task"
+        placeholder="Add Todo..."
         maxlength="250"
       />
-      <button type="submit">Add</button>
+      <button type="submit" class="primary-btn">submit</button>
     </form>
 
     @if (form.controls.title.touched && form.controls.title.invalid) {
@@ -31,54 +29,40 @@
     <p class="error">{{ errorMessage }}</p>
   }
 
-  <div class="card">
+  <div class="card list-card">
     @if (todos.length > 0) {
-      <table>
-        <thead>
-          <tr>
-            <th>Done</th>
-            <th>Title</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      <ul class="todo-list">
+        <li class="todo-row" *ngFor="let todo of todos">
+          <label class="todo-main">
+            <input
+              type="checkbox"
+              [checked]="todo.completed"
+              (change)="toggleCompleted(todo)"
+            />
+            @if (editingId !== todo.id) {
+              <span [class.completed]="todo.completed">{{ todo.title }}</span>
+            } @else {
+              <textarea
+                class="edit-textarea"
+                [formControl]="editForm.controls.title"
+                maxlength="250"
+              ></textarea>
+            }
+          </label>
 
-        <tbody>
-          <tr *ngFor="let todo of todos">
-            <td>
-              <input
-                type="checkbox"
-                [checked]="todo.completed"
-                (change)="toggleCompleted(todo)"
-              />
-            </td>
-
-            <td>
-              @if (editingId !== todo.id) {
-                <span [class.completed]="todo.completed">{{ todo.title }}</span>
-              } @else {
-                <textarea
-                  class="edit-textarea"
-                  [formControl]="editForm.controls.title"
-                  maxlength="250"
-                  rows="2"
-                ></textarea>
-              }
-            </td>
-
-            <td>
-              @if (editingId !== todo.id) {
-                <button type="button" (click)="startEdit(todo)">Edit</button>
-                <button type="button" (click)="remove(todo)">Remove</button>
-              } @else {
-                <button type="button" (click)="saveEdit(todo)">Save</button>
-                <button type="button" (click)="cancelEdit()">Cancel</button>
-              }
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          <div class="actions">
+            @if (editingId !== todo.id) {
+              <button type="button" class="pill edit" (click)="startEdit(todo)">edit</button>
+              <button type="button" class="pill delete" (click)="remove(todo)">x</button>
+            } @else {
+              <button type="button" class="pill save" (click)="saveEdit(todo)">save</button>
+              <button type="button" class="pill cancel" (click)="cancelEdit()">cancel</button>
+            }
+          </div>
+        </li>
+      </ul>
     } @else {
-      <p>No ToDo items yet.</p>
+      <p class="empty-state">No ToDo items yet.</p>
     }
   </div>
 </section>

@@ -11,7 +11,7 @@ import { Header } from "../../shared/header/header";
   selector: 'app-home',
   imports: [CommonModule, ReactiveFormsModule, Header],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrls: ['./home.css'],
 })
 export class HomeComponent implements OnInit {
   private fb = inject(FormBuilder);
