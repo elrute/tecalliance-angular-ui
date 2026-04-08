@@ -14,10 +14,20 @@ describe('Header', () => {
 
     fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('creates the shell with nav title', () => {
     expect(component).toBeTruthy();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.title')?.textContent).toContain('ToDo Portal');
+  });
+
+  it('exposes links to Home and About routes', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const links = Array.from(compiled.querySelectorAll('nav a'));
+    expect(links.map((link) => link.textContent?.trim())).toEqual(['Home', 'About']);
+    expect(links[0].getAttribute('href')).toContain('/home');
+    expect(links[1].getAttribute('href')).toContain('/about');
   });
 });
