@@ -11,8 +11,10 @@ type ApiMock = Pick<TodoApiService, 'validateUser'> & {
   validateUser: ReturnType<typeof vi.fn<(email: string) => ReturnType<TodoApiService['validateUser']>>>;
 };
 
-type SessionMock = Pick<SessionService, 'setUser'> & {
+type SessionMock = Pick<SessionService, 'setUser' | 'getEmail' | 'clear'> & {
   setUser: ReturnType<typeof vi.fn<(user: User) => void>>;
+  getEmail: ReturnType<typeof vi.fn<() => string | null>>;
+  clear: ReturnType<typeof vi.fn<() => void>>;
 };
 
 describe('LoginComponent', () => {
@@ -28,6 +30,8 @@ describe('LoginComponent', () => {
     };
     session = {
       setUser: vi.fn<(user: User) => void>(),
+      getEmail: vi.fn(() => null),
+      clear: vi.fn(),
     };
 
     await TestBed.configureTestingModule({

@@ -15,7 +15,11 @@ type ApiMock = {
   deleteTodo: ReturnType<typeof vi.fn<(id: number) => ReturnType<TodoApiService['deleteTodo']>>>;
 };
 
-type SessionMock = Pick<SessionService, 'getUser'> & { getUser: ReturnType<typeof vi.fn<() => ReturnType<SessionService['getUser']>>> };
+type SessionMock = Pick<SessionService, 'getUser' | 'getEmail' | 'clear'> & {
+  getUser: ReturnType<typeof vi.fn<() => ReturnType<SessionService['getUser']>>>;
+  getEmail: ReturnType<typeof vi.fn<() => string | null>>;
+  clear: ReturnType<typeof vi.fn<() => void>>;
+};
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -39,7 +43,9 @@ describe('HomeComponent', () => {
       deleteTodo: vi.fn<(id: number) => Observable<void>>()
     };
     session = {
-      getUser: vi.fn<() => User | null>()
+      getUser: vi.fn<() => User | null>(),
+      getEmail: vi.fn(() => storedUser.email),
+      clear: vi.fn()
     };
 
     await TestBed.configureTestingModule({
